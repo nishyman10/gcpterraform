@@ -26,3 +26,9 @@ resource "google_storage_bucket_iam_binding" "allow_public_read" {
   members = ["allUsers"]
   role    = "roles/storage.objectViewer"
 }
+
+resource "google_storage_bucket_iam_binding" "cloud_build_get_iam_policy" {
+  bucket  = google_storage_bucket.dynamic_bucket.id
+  members = ["serviceAccount:419014910717@cloudbuild.gserviceaccount.com"]
+  role    = "roles/storage.buckets.getIamPolicy"
+}
