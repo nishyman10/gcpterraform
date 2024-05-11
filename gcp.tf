@@ -8,6 +8,12 @@ resource "random_id" "bucket_suffix" {
   byte_length = 4
 }
 
+resource "google_project_iam_member" "cloud_build_get_iam_policy" {
+  project = "fleet-garage-421904"  # Replace with your actual Google Cloud project ID
+  member  = "serviceAccount:419014910717@cloudbuild.gserviceaccount.com"
+  role    = "roles/storage.buckets.getIamPolicy"
+}
+
 resource "google_storage_bucket" "dynamic_bucket" {
   name          = "my-bucket-${random_id.bucket_suffix.hex}"
   location      = "US"
@@ -19,12 +25,6 @@ resource "google_storage_bucket" "dynamic_bucket" {
   }
 
   public_access_prevention = "enforced"
-}
-
-resource "google_storage_bucket_iam_member" "cloud_build_get_iam_policy" {
-  bucket = google_storage_bucket.dynamic_bucket.name
-  member = "serviceAccount:419014910717@cloudbuild.gserviceaccount.com"
-  role   = "roles/storage.buckets.getIamPolicy"
 }
 
 resource "google_storage_bucket_iam_binding" "allow_public_read" {
