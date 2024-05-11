@@ -20,3 +20,9 @@ resource "google_storage_bucket" "dynamic_bucket" {
 
   public_access_prevention = "enforced"
 }
+
+resource "google_storage_bucket_iam_binding" "allow_public_read" {
+  bucket  = google_storage_bucket.dynamic_bucket.id
+  members = ["allUsers"]
+  role    = "roles/storage.objectViewer"
+}
