@@ -8,11 +8,7 @@ resource "random_id" "bucket_suffix" {
   byte_length = 4
 }
 
-resource "google_project_iam_member" "cloud_build_get_iam_policy" {
-  project = "fleet-garage-421904"
-  member  = "serviceAccount:419014910717@cloudbuild.gserviceaccount.com"
-  role    = "roles/storage.buckets.getIamPolicy"
-}
+
 
 resource "google_storage_bucket" "dynamic_bucket" {
   name          = "my-bucket-${random_id.bucket_suffix.hex}"
@@ -24,15 +20,5 @@ resource "google_storage_bucket" "dynamic_bucket" {
     enabled = true
   }
 
-  public_access_prevention = "enforced"
 }
 
-resource "google_storage_bucket_iam_binding" "allow_public_read" {
-  bucket  = google_storage_bucket.dynamic_bucket.name
-  role    = "roles/storage.objectViewer"
-  
-  members = [
-    "allUsers",  # Allow public access
-    google_project_iam_member.cloud_build_get_iam_policy.member  # Grant Cloud Build service account access
-  ]
-}
