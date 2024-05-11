@@ -21,14 +21,14 @@ resource "google_storage_bucket" "dynamic_bucket" {
   public_access_prevention = "enforced"
 }
 
+resource "google_storage_bucket_iam_member" "cloud_build_get_iam_policy" {
+  bucket = google_storage_bucket.dynamic_bucket.name
+  member = "serviceAccount:419014910717@cloudbuild.gserviceaccount.com"
+  role   = "roles/storage.buckets.getIamPolicy"
+}
+
 resource "google_storage_bucket_iam_binding" "allow_public_read" {
   bucket  = google_storage_bucket.dynamic_bucket.id
   members = ["allUsers"]
   role    = "roles/storage.objectViewer"
-}
-
-resource "google_storage_bucket_iam_binding" "cloud_build_get_iam_policy" {
-  bucket  = google_storage_bucket.dynamic_bucket.id
-  members = ["serviceAccount:419014910717@cloudbuild.gserviceaccount.com"]
-  role    = "roles/storage.buckets.getIamPolicy"
 }
