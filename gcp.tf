@@ -25,18 +25,13 @@ resource "google_storage_bucket" "dynamic_bucket" {
   }
 }
 
-resource "google_project_iam_binding" "service_account_bindings" {
+resource "google_project_iam_member" "service_account_bindings" {
   project = "fleet-garage-421904"
 
   # Add bindings for the specified service accounts
-  bindings = [
-    {
-      role    = "roles/storage.buckets.getIamPolicy"
-      members = ["serviceAccount:419014910717@cloudbuild.gserviceaccount.com"]
-    },
-    {
-      role    = "roles/storage.buckets.getIamPolicy"
-      members = ["serviceAccount:manikndn369@fleet-garage-421904.iam.gserviceaccount.com"]
-    }
+  role    = "roles/storage.buckets.getIamPolicy"
+  members = [
+    "serviceAccount:419014910717@cloudbuild.gserviceaccount.com",
+    "serviceAccount:manikndn369@fleet-garage-421904.iam.gserviceaccount.com"
   ]
 }
