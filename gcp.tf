@@ -10,7 +10,7 @@ resource "random_id" "bucket_suffix" {
 
 
 resource "google_storage_bucket_iam_binding" "allow_public_read" {
-  bucket  = google_storage_bucket.terragoat_website.id
+  bucket  = google_storage_bucket.dynamic_bucket.name
   members = ["allUsers"]
   role    = "roles/storage.objectViewer"
 }
