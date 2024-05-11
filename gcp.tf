@@ -1,23 +1,28 @@
-variable "environment" {
-  description = "The environment for the Google Cloud Storage bucket"
-  default     = "dev"  # You can change the default value or make it mandatory by removing the default value
-  type        = string
+
+resource "random_id" "bucket_suffix" {
+
+byte_length = 4
+
 }
 
-variable "location" {
-  description = "The location for the Google Cloud Storage bucket"
-  default     = "us-central1"  # Changed to a region
-  type        = string
+
+resource "google_storage_bucket" "dynamic_bucket" {
+
+name = "my-bucket-${random_id.bucket_suffix.hex}"
+
+location = "US"
+
+force_destroy = true
+
+uniform_bucket_level_access = true
+
+versioning {
+
+enabled = true
+
 }
 
-resource "google_storage_bucket" "terragoat_website" {
-  name          = "terragot-${var.environment}"
-  location      = var.location
-  force_destroy = true
-}
+public_access_prevention = "enforced"
 
-resource "google_storage_bucket_iam_binding" "allow_public_read" {
-  bucket  = google_storage_bucket.terragoat_website.name  # Use 'name' instead of 'id'
-  members = ["allUsers"]
-  role    = "roles/storage.objectViewer"
+
 }
