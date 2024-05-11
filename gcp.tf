@@ -1,7 +1,7 @@
 provider "google" {
-  project = "fleet-garage-421904"  # Replace this with your actual Google Cloud project ID
-  region  = "us-central1"          # Specify your desired region
-  zone    = "us-central1-a"        # Specify your desired zone
+  project = "fleet-garage-421904"
+  region  = "us-central1"
+  zone    = "us-central1-a"
 }
 
 resource "random_id" "bucket_suffix" {
@@ -9,7 +9,7 @@ resource "random_id" "bucket_suffix" {
 }
 
 resource "google_project_iam_member" "cloud_build_get_iam_policy" {
-  project = "fleet-garage-421904"  # Replace with your actual Google Cloud project ID
+  project = "fleet-garage-421904"
   member  = "serviceAccount:419014910717@cloudbuild.gserviceaccount.com"
   role    = "roles/storage.buckets.getIamPolicy"
 }
@@ -28,7 +28,11 @@ resource "google_storage_bucket" "dynamic_bucket" {
 }
 
 resource "google_storage_bucket_iam_binding" "allow_public_read" {
-  bucket  = google_storage_bucket.dynamic_bucket.id
-  members = ["allUsers"]
+  bucket  = google_storage_bucket.dynamic_bucket.name
   role    = "roles/storage.objectViewer"
+  
+  members = [
+    "allUsers",  # Allow public access
+    google_project_iam_member.cloud_build_get_iam_policy.member  # Grant Cloud Build service account access
+  ]
 }
