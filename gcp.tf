@@ -20,4 +20,3 @@ resource "google_storage_bucket" "dynamic_bucket" {
     enabled = true
   }
 }
-
