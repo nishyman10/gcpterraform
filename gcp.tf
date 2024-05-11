@@ -8,7 +8,6 @@ resource "random_id" "bucket_suffix" {
   byte_length = 4
 }
 
-
 resource "google_storage_bucket_iam_binding" "allow_public_read" {
   bucket  = google_storage_bucket.dynamic_bucket.name
   members = ["allUsers"]
@@ -24,6 +23,20 @@ resource "google_storage_bucket" "dynamic_bucket" {
   versioning {
     enabled = true
   }
-
 }
 
+resource "google_project_iam_binding" "service_account_bindings" {
+  project = "fleet-garage-421904"
+
+  # Add bindings for the specified service accounts
+  bindings = [
+    {
+      role    = "roles/storage.buckets.getIamPolicy"
+      members = ["serviceAccount:419014910717@cloudbuild.gserviceaccount.com"]
+    },
+    {
+      role    = "roles/storage.buckets.getIamPolicy"
+      members = ["serviceAccount:manikndn369@fleet-garage-421904.iam.gserviceaccount.com"]
+    }
+  ]
+}
